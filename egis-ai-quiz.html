@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human or AI?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --bg: #08212C;
+    --surface: #0d2e3d;
+    --border: #252525;
+    --accent: #c8f060;
+    --red: #f06060;
+    --text: #e4e4e4;
+    --muted: #666;
+    --sans: 'Urbanist', 'DM Sans', sans-serif;
+    --serif: 'EB Garamond', 'Georgia', serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .screen { display: none; width: 100%; max-width: 660px; animation: fadeUp 0.45s ease both; }
+  .screen.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INTRO */
+  .intro-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+  }
+  .intro-label::before { content: ''; width: 28px; height: 1px; background: var(--accent); }
+
+  .intro-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 9vw, 88px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+  .intro-title em { font-style: italic; color: var(--accent); }
+
+  .intro-sub {
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 40px;
+    max-width: 480px;
+  }
+
+  .intro-rule {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    border-left: 2px solid var(--accent);
+    padding: 14px 18px;
+    margin-bottom: 44px;
+    letter-spacing: 0.03em;
+    line-height: 1.65;
+  }
+
+  .btn-start {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 40px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-start:hover { background: #d4f570; transform: translateY(-1px); }
+
+  /* QUIZ */
+  .quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .quiz-counter {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .quiz-topic {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 2px;
+  }
+
+  .progress-bar {
+    height: 2px;
+    background: var(--border);
+    margin-bottom: 36px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .text-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+  }
+
+  .text-block p {
+    font-size: 18px;
+    line-height: 1.85;
+    font-weight: 400;
+    color: #ccc;
+    font-family: var(--serif);
+    font-style: italic;
+  }
+
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn-choice {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-choice:hover { background: #123347; }
+  .btn-choice.human:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-choice.ai:hover { border-color: var(--red); color: var(--red); }
+
+  .feedback-banner {
+    border-radius: 4px;
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .feedback-banner.correct {
+    background: rgba(200,240,96,0.06);
+    border: 1px solid rgba(200,240,96,0.22);
+  }
+  .feedback-banner.wrong {
+    background: rgba(240,96,96,0.06);
+    border: 1px solid rgba(240,96,96,0.22);
+  }
+
+  .feedback-icon { font-size: 18px; flex-shrink: 0; }
+
+  .feedback-source {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .feedback-banner.correct .feedback-source { color: var(--accent); }
+  .feedback-banner.wrong .feedback-source { color: var(--red); }
+
+  .btn-next {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 15px 32px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-next:hover { background: #d4f570; }
+
+  /* SCORE */
+  .score-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .score-label::before { content: ''; width: 28px; height: 1px; background: var(--accent); }
+
+  .score-big {
+    font-family: var(--serif);
+    font-size: clamp(90px, 18vw, 140px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .score-denom {
+    font-family: var(--serif);
+    font-size: 30px;
+    color: var(--muted);
+  }
+
+  .score-msg {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-style: italic;
+    color: var(--text);
+    margin: 18px 0 40px;
+    line-height: 1.45;
+    max-width: 520px;
+  }
+
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 28px 30px;
+    margin-bottom: 36px;
+    border-radius: 0 4px 4px 0;
+  }
+  .stat-box .stat-num {
+    font-family: var(--serif);
+    font-size: 60px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .stat-box p {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 14px;
+  }
+  .stat-box .stat-source {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #444;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+  }
+  .stat-box .stat-asterisk {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: #555;
+    font-style: italic;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    line-height: 1.6;
+  }
+
+  /* ARTIFACTS */
+  .art-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .art-title em { font-style: italic; color: var(--accent); }
+
+  .art-sub {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+
+  .art-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 40px; }
+
+  .art-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .art-item:hover { border-color: #333; }
+
+  .art-item-header {
+    padding: 17px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .art-emoji { font-size: 17px; flex-shrink: 0; }
+
+  .art-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    flex: 1;
+  }
+
+  .art-arrow { font-size: 11px; color: var(--muted); transition: transform 0.2s; }
+  .art-item.open .art-arrow { transform: rotate(180deg); }
+
+  .art-body { display: none; padding: 0 22px 20px 53px; }
+  .art-item.open .art-body { display: block; }
+
+  .art-desc {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: #999;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+
+  .art-eg {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.65;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.025);
+    border-left: 2px solid var(--border);
+    border-radius: 0 2px 2px 0;
+  }
+  .art-eg strong { color: var(--red); font-style: normal; font-weight: 600; }
+
+  .btn-restart {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-restart:hover { border-color: #444; color: var(--text); }
+
+  .footnote {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: #3a3a3a;
+    line-height: 1.7;
+    font-family: var(--mono);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<div class="screen active" id="screen-intro">
+  <div class="intro-label">Workshop</div>
+  <h1 class="intro-title">Human or<br><em>Machine?</em></h1>
+  <p class="intro-sub">Six short texts. Three were written by humans. Three were generated by AI. One text at a time. Two choices.</p>
+  <div class="intro-rule">
+    Read each text carefully.<br>
+    Decide: written by a human, or generated by AI?
+  </div>
+  <button class="btn-start" onclick="startQuiz()">
+    Start
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<div class="screen" id="screen-quiz">
+  <div class="quiz-top">
+    <span class="quiz-counter" id="quiz-counter">Text 1 of 6</span>
+    <span class="quiz-topic" id="quiz-topic"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="text-block"><p id="quiz-text"></p></div>
+  <div class="btn-row" id="btn-row">
+    <button class="btn-choice human" onclick="answer('human')">👤 Human</button>
+    <button class="btn-choice ai" onclick="answer('ai')">🤖 AI</button>
+  </div>
+  <div id="feedback-zone" style="margin-top:24px; display:none;">
+    <div class="feedback-banner" id="feedback-banner">
+      <div class="feedback-icon" id="feedback-icon"></div>
+      <div class="feedback-source" id="feedback-source"></div>
+    </div>
+    <button class="btn-next" onclick="nextText()">
+      <span id="next-label">Next text</span>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="screen" id="screen-score">
+  <div class="score-label">Your result</div>
+  <div>
+    <span class="score-big" id="score-big">0</span>
+    <span class="score-denom"> / 6</span>
+  </div>
+  <p class="score-msg" id="score-msg"></p>
+  <div class="stat-box">
+    <div class="stat-num">53%</div>
+    <p>In controlled experiments, humans correctly identified AI-generated text only 53% of the time, barely above the 50% you would get from random guessing. Expertise made almost no difference.</p>
+    <div class="stat-source">Penn State University, 2024. Experiments on human detection of AI-generated text.</div>
+    <div class="stat-asterisk">* These results date from 2024. AI models have evolved significantly since then, making detection even harder.</div>
+  </div>
+  <button class="btn-next" onclick="showArtifacts()">
+    See what gives AI away
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<div class="screen" id="screen-artifacts">
+  <div class="score-label">The tells</div>
+  <h2 class="art-title">What <em>gives<br>it away</em></h2>
+  <p class="art-sub">Eight recurring patterns in AI-generated text. None are definitive alone. Together, they compound.</p>
+
+  <div class="art-list">
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🧱</span>
+        <span class="art-name">Empty Tricolon</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">AI loves groups of three abstract nouns at the end of a sentence. They sound substantial but carry no specific argument.</p>
+        <div class="art-eg">"...with <strong>clarity, purpose, and commitment</strong>."<br>"...with <strong>authenticity, consistency, and purpose</strong>."</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🪜</span>
+        <span class="art-name">Formal Connectors</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">Overuse of "furthermore", "moreover", "in addition". Humans vary their connectors naturally. AI chains them mechanically.</p>
+        <div class="art-eg">"<strong>Furthermore</strong>, organizations must adapt. <strong>Moreover</strong>, leaders need to align their..."</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🌫️</span>
+        <span class="art-name">No Friction</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">Human writers use "however", "yet", "but" to introduce real tension. AI text converges toward smooth, positive conclusions with no genuine doubt and no real concession.</p>
+        <div class="art-eg">Human: "Yet data alone is not enough. Sometimes it can be catastrophic."<br>AI: "Data enables smarter, faster decisions."</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">📐</span>
+        <span class="art-name">Uniform Sentence Length</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">All sentences flow at the same comfortable speed. Human prose varies with short punches, long elaborations, the occasional fragment. AI settles into a rhythm and stays there.</p>
+        <div class="art-eg">Every sentence flows at the same comfortable speed. It is consistent and smooth. Nothing disrupts the pace throughout.</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🏆</span>
+        <span class="art-name">Hollow Superlatives</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">Claims like "the most successful", "leading the way", "unprecedented" appear without evidence or argument. AI asserts, it rarely proves.</p>
+        <div class="art-eg">"<strong>The most successful organizations</strong> are those that understand..." understand what, exactly?</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🎁</span>
+        <span class="art-name">Positive Wrap-Up</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">AI text almost always ends on an uplifting, aspirational note. Human writing can end on ambiguity, a provocation, or an open question. AI closes, humans sometimes leave things open.</p>
+        <div class="art-eg">"...for <strong>decades to come</strong>." / "...<strong>fostering trust at every touchpoint</strong>." / "...a <strong>defining competitive advantage</strong>."</div>
+      </div>
+    </div>
+
+
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">〰️</span>
+        <span class="art-name">The Em Dash Signal</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">AI uses em dashes frequently and consistently as a stylistic connector. One dash in isolation is not a signal. A pattern of them usually is. Human writers use them more sparingly and unevenly.</p>
+        <div class="art-eg">"...it can be catastrophic — whatever the result, we make decisions based on a perception..."<br>One dash. Or a tell. Depends on everything else around it.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn-restart" onclick="restart()">Try again</button>
+
+  <div class="footnote">
+    Sources: Penn State University (2024). Q&A: The increasing difficulty of detecting AI versus human-generated text. Markowitz et al. (2024) Linguistic Markers of AI Communication. CoSchedule State of AI in Marketing Report (2025). Cision 2025 Comms Report.
+  </div>
+</div>
+
+<script>
+const texts = [
+  {
+    topic: 'Leadership',
+    type: 'ai',
+    text: 'Great leaders are not necessarily the loudest voices in the room. Communication is about more than crafting the right message. It is about understanding the gap between what an organization believes it stands for and what its audiences actually experience. That gap is rarely acknowledged. It is almost never measured. And it is usually where trust is lost. The leaders who close that gap treat communication not as a function but as a discipline, one that requires the same rigor and intellectual honesty as any other strategic priority.',
+    source: 'AI generated'
+  },
+  {
+    topic: 'Engineering',
+    type: 'ai',
+    text: 'The replacement of the Bayfield River Bridge in Huron County required careful coordination across structural, environmental and construction disciplines. The presence of Species-At-Risk near the site, including Mapleleaf Mussels, imposed strict seasonal constraints on in-water works. A temporary modular bridge was installed to maintain traffic flow throughout construction. The final design delivers a durable, high-performance structure that meets modern standards while providing improved pedestrian and cyclist access to the community.',
+    source: 'AI generated'
+  },
+  {
+    topic: 'Marketing',
+    type: 'human',
+    text: 'Over the past 60 years, marketing has moved from being product-centric to being consumer-centric. Today we see marketing transforming once again. Companies are expanding their focus from products to consumers to humankind issues, shifting from consumer-centricity to human-centricity, where profitability is balanced with corporate responsibility.',
+    source: 'Philip Kotler, Marketing 3.0 (2010)'
+  },
+  {
+    topic: 'Decision-making',
+    type: 'human',
+    text: 'Not all decisions work out to be the right ones, regardless of the amount of data we collect. Sometimes the impact of wrong decisions is minor, and sometimes it can be catastrophic \u2014 whatever the result, we make decisions based on a perception of the world that may not, in fact, be completely accurate.',
+    source: 'Simon Sinek, Start With Why (2009)'
+  },
+  {
+    topic: 'Marketing',
+    type: 'ai',
+    text: 'In today\'s competitive landscape, brands must go beyond promoting their products. They need to create meaningful connections, deliver genuine value, and align their strategies with the broader needs of society. Marketing is no longer just about selling. It is about building lasting relationships and fostering trust at every touchpoint.',
+    source: 'AI generated'
+  },
+  {
+    topic: 'Engineering',
+    type: 'human',
+    text: 'Due to its complex geometry and the multiple interfaces between civil engineering and electrical and mechanical equipment, the Jacques Chaban-Delmas Bridge was conceived using a complete 3D digital model right from the design phase. This helped detect mechanical clashes with extreme precision, and provide the solutions to resolve them.',
+    source: 'Egis, Jacques Chaban-Delmas Bridge'
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let queue = [];
+let current = 0;
+let score = 0;
+
+function startQuiz() {
+  queue = shuffle(texts);
+  current = 0;
+  score = 0;
+  showText();
+  goTo('screen-quiz');
+}
+
+function showText() {
+  const t = queue[current];
+  document.getElementById('quiz-counter').textContent = 'Text ' + (current + 1) + ' of ' + queue.length;
+  document.getElementById('quiz-topic').textContent = t.topic;
+  document.getElementById('quiz-text').textContent = t.text;
+  document.getElementById('progress-fill').style.width = ((current / queue.length) * 100) + '%';
+  document.getElementById('feedback-zone').style.display = 'none';
+  document.getElementById('btn-row').style.display = 'grid';
+  document.getElementById('next-label').textContent = current < queue.length - 1 ? 'Next text' : 'See my score';
+}
+
+function answer(choice) {
+  const t = queue[current];
+  const correct = choice === t.type;
+  if (correct) score++;
+  document.getElementById('btn-row').style.display = 'none';
+  const banner = document.getElementById('feedback-banner');
+  banner.className = 'feedback-banner ' + (correct ? 'correct' : 'wrong');
+  document.getElementById('feedback-icon').textContent = correct ? '✓' : '✗';
+  document.getElementById('feedback-source').textContent = t.source;
+  document.getElementById('feedback-zone').style.display = 'block';
+}
+
+function nextText() {
+  current++;
+  if (current >= queue.length) { showScore(); } else { showText(); }
+}
+
+function showScore() {
+  document.getElementById('score-big').textContent = score;
+  const msgs = {
+    0: "Indistinguishable from chance. You are not alone, most people score the same.",
+    1: "One out of six. The tells are subtle when you do not know what to look for.",
+    2: "Two out of six. You noticed something. That is more than most.",
+    3: "Three out of six. Exactly at the average. The line is genuinely blurry.",
+    4: "Four out of six. Above average. You caught several of the patterns.",
+    5: "Five out of six. Strong. One slipped through, it usually does.",
+    6: "Perfect. You knew exactly what to look for."
+  };
+  document.getElementById('score-msg').textContent = msgs[score];
+  document.getElementById('progress-fill').style.width = '100%';
+  goTo('screen-score');
+}
+
+function showArtifacts() { goTo('screen-artifacts'); }
+function restart() { goTo('screen-intro'); }
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleArt(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

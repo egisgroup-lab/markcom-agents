@@ -12,11 +12,11 @@
   :root {
     --bg: #08212C;
     --surface: #0d2e3d;
-    --border: #252525;
-    --accent: #c8f060;
+    --border: #1c4254;
+    --accent: #ABC022;
     --red: #f06060;
     --text: #e4e4e4;
-    --muted: #666;
+    --muted: #97B8BB;
     --sans: 'Urbanist', 'DM Sans', sans-serif;
     --serif: 'EB Garamond', 'Georgia', serif;
     --mono: 'DM Mono', monospace;
@@ -350,7 +350,7 @@
     overflow: hidden;
     transition: border-color 0.2s;
   }
-  .art-item:hover { border-color: #333; }
+  .art-item:hover { border-color: #1c4254; }
 
   .art-item-header {
     padding: 17px 22px;
@@ -488,93 +488,115 @@
 <div class="screen" id="screen-artifacts">
   <div class="score-label">The tells</div>
   <h2 class="art-title">What <em>gives<br>it away</em></h2>
-  <p class="art-sub">Eight recurring patterns in AI-generated text. None are definitive alone. Together, they compound.</p>
+  <p class="art-sub">Nine recurring patterns in AI-generated text. None are definitive alone. Together, they compound.</p>
 
   <div class="art-list">
 
     <div class="art-item">
       <div class="art-item-header" onclick="toggleArt(this)">
-        <span class="art-emoji">🧱</span>
-        <span class="art-name">Empty Tricolon</span>
+        <span class="art-emoji">🎭</span>
+        <span class="art-name">The Fake Reveal</span>
         <span class="art-arrow">▾</span>
       </div>
       <div class="art-body">
-        <p class="art-desc">AI loves groups of three abstract nouns at the end of a sentence. They sound substantial but carry no specific argument.</p>
-        <div class="art-eg">"...with <strong>clarity, purpose, and commitment</strong>."<br>"...with <strong>authenticity, consistency, and purpose</strong>."</div>
+        <p class="art-desc">AI loves the "It's not just X, it's Y" structure. It tells you what something is not before telling you what it is, as if every sentence were a revelation. By the third time, it falls flat.</p>
+        <div class="art-eg">AI: "It's <strong>not just a tool, it's a partner</strong>."<br>Human: "This tool saves you two hours a day."</div>
       </div>
     </div>
 
     <div class="art-item">
       <div class="art-item-header" onclick="toggleArt(this)">
-        <span class="art-emoji">🪜</span>
-        <span class="art-name">Formal Connectors</span>
+        <span class="art-emoji">📏</span>
+        <span class="art-name">The Comfortable Rhythm</span>
         <span class="art-arrow">▾</span>
       </div>
       <div class="art-body">
-        <p class="art-desc">Overuse of "furthermore", "moreover", "in addition". Humans vary their connectors naturally. AI chains them mechanically.</p>
-        <div class="art-eg">"<strong>Furthermore</strong>, organizations must adapt. <strong>Moreover</strong>, leaders need to align their..."</div>
+        <p class="art-desc">Every sentence has roughly the same length. No very short one. No very long one. Humans break the rhythm. They drop a three-word sentence to make a point land.</p>
+        <div class="art-eg">AI: three smooth 18-word sentences in a row.<br>Human: "We failed. Twice. Then we understood why and rebuilt the whole thing from scratch."</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🧱</span>
+        <span class="art-name">The Triple Combo</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">Three abstract nouns in a row to sound rich, while saying nothing precise. AI reaches for this whenever it wants to feel substantial.</p>
+        <div class="art-eg">AI: "...with <strong>clarity, purpose, and commitment</strong>."<br>Human: "...we answered every email within an hour."</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">🎈</span>
+        <span class="art-name">The Empty Big Word</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">Superlatives and reflex words ("empower", "leverage", "elevate", "seamless", "the most innovative") dropped in with no proof behind them. AI asserts, it rarely shows.</p>
+        <div class="art-eg">AI: "our <strong>most innovative</strong> solution yet."<br>Human: "the version that cut load time from 8 to 2 seconds."</div>
+      </div>
+    </div>
+
+    <div class="art-item">
+      <div class="art-item-header" onclick="toggleArt(this)">
+        <span class="art-emoji">💬</span>
+        <span class="art-name">The Declared Emotion</span>
+        <span class="art-arrow">▾</span>
+      </div>
+      <div class="art-body">
+        <p class="art-desc">AI announces an emotion but never makes you feel it, because it has no real experience to draw on. The feeling is stated, not lived.</p>
+        <div class="art-eg">AI: "We are <strong>incredibly excited</strong> about this meaningful journey."<br>Human: "When the first user signed up, I called my co-founder at midnight."</div>
       </div>
     </div>
 
     <div class="art-item">
       <div class="art-item-header" onclick="toggleArt(this)">
         <span class="art-emoji">🌫️</span>
-        <span class="art-name">No Friction</span>
+        <span class="art-name">The Vague Example</span>
         <span class="art-arrow">▾</span>
       </div>
       <div class="art-body">
-        <p class="art-desc">Human writers use "however", "yet", "but" to introduce real tension. AI text converges toward smooth, positive conclusions with no genuine doubt and no real concession.</p>
-        <div class="art-eg">Human: "Yet data alone is not enough. Sometimes it can be catastrophic."<br>AI: "Data enables smarter, faster decisions."</div>
+        <p class="art-desc">When an example is needed, AI stays abstract and hypothetical instead of naming something real. Humans name the place, the date, the number.</p>
+        <div class="art-eg">AI: "For example, a marketing team <strong>might use AI to improve engagement</strong>."<br>Human: "Last March, our Lyon team used it to cut report time by half."</div>
       </div>
     </div>
 
     <div class="art-item">
       <div class="art-item-header" onclick="toggleArt(this)">
-        <span class="art-emoji">📐</span>
-        <span class="art-name">Uniform Sentence Length</span>
+        <span class="art-emoji">🛟</span>
+        <span class="art-name">The Cushion</span>
         <span class="art-arrow">▾</span>
       </div>
       <div class="art-body">
-        <p class="art-desc">All sentences flow at the same comfortable speed. Human prose varies with short punches, long elaborations, the occasional fragment. AI settles into a rhythm and stays there.</p>
-        <div class="art-eg">Every sentence flows at the same comfortable speed. It is consistent and smooth. Nothing disrupts the pace throughout.</div>
-      </div>
-    </div>
-
-    <div class="art-item">
-      <div class="art-item-header" onclick="toggleArt(this)">
-        <span class="art-emoji">🏆</span>
-        <span class="art-name">Hollow Superlatives</span>
-        <span class="art-arrow">▾</span>
-      </div>
-      <div class="art-body">
-        <p class="art-desc">Claims like "the most successful", "leading the way", "unprecedented" appear without evidence or argument. AI asserts, it rarely proves.</p>
-        <div class="art-eg">"<strong>The most successful organizations</strong> are those that understand..." understand what, exactly?</div>
+        <p class="art-desc">AI stacks hedges and precautions instead of saying things directly. Humans commit to a position.</p>
+        <div class="art-eg">AI: "<strong>It is worth noting that it is important to consider</strong> that..."<br>Human: "This won't work for small teams. Here's why."</div>
       </div>
     </div>
 
     <div class="art-item">
       <div class="art-item-header" onclick="toggleArt(this)">
         <span class="art-emoji">🎁</span>
-        <span class="art-name">Positive Wrap-Up</span>
+        <span class="art-name">The Happy Ending</span>
         <span class="art-arrow">▾</span>
       </div>
       <div class="art-body">
-        <p class="art-desc">AI text almost always ends on an uplifting, aspirational note. Human writing can end on ambiguity, a provocation, or an open question. AI closes, humans sometimes leave things open.</p>
-        <div class="art-eg">"...for <strong>decades to come</strong>." / "...<strong>fostering trust at every touchpoint</strong>." / "...a <strong>defining competitive advantage</strong>."</div>
+        <p class="art-desc">The text almost always closes on an uplifting, aspirational note, even when the subject doesn't call for one. Humans can end on a doubt, a question, or just stop when the point is made.</p>
+        <div class="art-eg">AI: "Ultimately, <strong>the future looks bright</strong> for those who embrace change."<br>Human: stops once the subject is covered, no moral attached.</div>
       </div>
     </div>
-
-
 
     <div class="art-item">
       <div class="art-item-header" onclick="toggleArt(this)">
         <span class="art-emoji">〰️</span>
-        <span class="art-name">The Em Dash Signal</span>
+        <span class="art-name">The Em Dash Habit</span>
         <span class="art-arrow">▾</span>
       </div>
       <div class="art-body">
-        <p class="art-desc">AI uses em dashes frequently and consistently as a stylistic connector. One dash in isolation is not a signal. A pattern of them usually is. Human writers use them more sparingly and unevenly.</p>
-        <div class="art-eg">"...it can be catastrophic — whatever the result, we make decisions based on a perception..."<br>One dash. Or a tell. Depends on everything else around it.</div>
+        <p class="art-desc">AI slips em dashes in everywhere a human would use a comma or a full stop. But careful: use this one only combined with the others, never alone. Some humans genuinely love em dashes.</p>
+        <div class="art-eg">AI: "it can be catastrophic <strong>—</strong> whatever the result, we decide based on a perception <strong>—</strong> that shapes everything."<br>One dash, or a tell. Depends on everything around it.</div>
       </div>
     </div>
 
@@ -583,7 +605,7 @@
   <button class="btn-restart" onclick="restart()">Try again</button>
 
   <div class="footnote">
-    Sources: Penn State University (2024). Q&A: The increasing difficulty of detecting AI versus human-generated text. Markowitz et al. (2024) Linguistic Markers of AI Communication. CoSchedule State of AI in Marketing Report (2025). Cision 2025 Comms Report.
+    Sources: Penn State University (2024), Q&A on detecting AI versus human text. Markowitz et al. (2024), Linguistic Markers of AI Communication. GC AI (2026), Contrastive Negation. Wikipedia, Signs of AI Writing. CoSchedule State of AI in Marketing (2025). Cision 2025 Comms Report.
   </div>
 </div>
 
